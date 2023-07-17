@@ -1,0 +1,5 @@
+flwr==1.4.0
+grpcio==1.56.0
+iterators==0.0.2
+numpy==1.25.0
+protobuf==3.20.3
