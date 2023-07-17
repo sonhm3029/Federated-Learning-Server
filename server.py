@@ -1,35 +1,31 @@
-from typing import Dict, List, Optional, Tuple, Union
-import flwr as fl
-from flwr.common import FitRes, Parameters, Scalar
-from flwr.server.client_proxy import ClientProxy
+from flask import Flask, render_template, jsonify
+from flask_cors import CORS
+from subprocess import call
 
-import numpy as np
-from flwr.server.strategy.aggregate import aggregate, weighted_loss_avg
-import sys
-import os
+from config.file_dev import extra_watch
 
-os.environ['FLWR_TELEMETRY_LOGGING'] = '1'
-class CustomStrategy(fl.server.strategy.FedAvg):
-    def aggregate_fit( 
-        self,
-        server_round: int,
-        results: List[Tuple[fl.server.client_proxy.ClientProxy, fl.common.FitRes]],
-        failures: List[Union[Tuple[ClientProxy, FitRes], BaseException]],
-    ) -> Tuple[Optional[Parameters], Dict[str, Scalar]]:
-    
-        aggregated_parameters, aggregated_metrics = super().aggregate_fit(server_round, results, failures)
+app = Flask(__name__)
+CORS(app)
 
-        return aggregated_parameters, aggregated_metrics
+@app.route("/")
+def index():
+    return render_template('index.html')
+
+@app.route("/execute-fl-server",methods=["POST"])
+def execute():
+    try:
+        call(["python", "fl_server.py"])
+        return jsonify({
+            "code": 200,
+            "message": "Success training task!"
+        })
+    except:
+        return jsonify({
+            "code": 500,
+            "message": "Fail to training"
+        })
 
 if __name__ == "__main__":
-    fl.server.start_server(
-        server_address="0.0.0.0:8000",
-        config=fl.server.ServerConfig(num_rounds=4),
-        strategy=CustomStrategy(
-            fraction_fit=1.0,
-            fraction_evaluate=1.0,
-            min_fit_clients=2,
-            min_evaluate_clients=2,
-            min_available_clients=2,
-        )
-    )
+    # call(["python", "fl_server.py"])
+    app.run(host="0.0.0.0", port=8000, debug=True, extra_files=extra_watch())
+    print("OK")
