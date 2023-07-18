@@ -21,18 +21,69 @@
     />
   </head>
   <body>
-    <div
-      class="container p-4 vh-100 border-primary border-1 flex justify-content-center align-items-center"
-    >
+    <div class="container p-4 border-primary border-1 monitor-wrapper">
       <div class="text-center mb-4">
         <button id="execute-fl">Start Federated Server</button>
       </div>
       <div class="info-field d-flex">
-        <div class="client-info"><h1 class="text-center">Client info</h1></div>
-        <div class="server-logs">
-          <h1 class="text-center">Server Logs</h1>
-          <div class="terminal"></div>
+        <div class="left-side">
+          <div class="client-info p-2">
+            <h2 class="text-center mb-3">Client info</h2>
+            <p class="line">
+              <span class="title">Fraction fit:</span
+              ><span class="value">1</span>
+            </p>
+            <p class="line">
+              <span class="title">Fraction evaluate:</span
+              ><span class="value">1</span>
+            </p>
+            <p class="line">
+              <span class="title">Min fit clients:</span
+              ><span class="value">2</span>
+            </p>
+            <p class="line">
+              <span class="title">Min evaluate clients:</span
+              ><span class="value">2</span>
+            </p>
+            <p class="line">
+              <span class="title">Min available clients: </span
+              ><span class="value">2</span>
+            </p>
+          </div>
+          <div class="server-logs p-2">
+            <h2 class="text-center mb-3">Server Logs</h2>
+          </div>
         </div>
+        <div class="right-side p-2">
+          <h2 class="text-center mb-3">Server Performance</h2>
+          <div class="server-performance">
+            <p class="line">
+              <span class="title">CPU usage:</span
+              ><span><span class="value" id="cpu_percent">---</span> %</span>
+            </p>
+            <p class="line">
+              <span class="title">CPU frequency:</span
+              ><span><span class="value" id="cpu_freq">---</span> GHz</span>
+            </p>
+            <p class="line">
+              <span class="title">Memory usage</span
+              ><span><span class="value" id="memory_percent">---</span> %</span>
+            </p>
+            <p class="line">
+              <span class="title">Disk usage</span
+              ><span><span class="value" id="disk_percent">---</span> %</span>
+            </p>
+            <p class="line">
+              <span class="title">System temperature</span
+              ><span
+                ><span class="value" id="system_temperatures">---</span>&deg</span
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="training-monitor">
+        <h1 class="text-center mt-3">Training monitor</h1>
       </div>
     </div>
 

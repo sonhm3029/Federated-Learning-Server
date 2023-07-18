@@ -8,9 +8,11 @@ from flwr.server.strategy.aggregate import aggregate, weighted_loss_avg
 import sys
 import os
 
+from config.sys_logging import init_logging_file
+
 from flwr.common import logger
 
-logger.configure(identifier="IVIRSE",filename="logs/log.txt")
+logger.configure(identifier="IVIRSE",filename=init_logging_file())
 
 os.environ['FLWR_TELEMETRY_LOGGING'] = '1'
 class CustomStrategy(fl.server.strategy.FedAvg):
@@ -28,7 +30,7 @@ class CustomStrategy(fl.server.strategy.FedAvg):
 if __name__ == "__main__":
     fl.server.start_server(
         server_address="0.0.0.0:8080",
-        config=fl.server.ServerConfig(num_rounds=2),
+        config=fl.server.ServerConfig(num_rounds=10),
         strategy=CustomStrategy(
             fraction_fit=1.0,
             fraction_evaluate=1.0,
