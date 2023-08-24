@@ -1,0 +1,1 @@
+python -m grpc_tools.protoc -I proto --python_out=ivirse/proto --grpc_python_out=ivirse/proto transport.proto
