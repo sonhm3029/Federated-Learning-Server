@@ -13,6 +13,7 @@ from ivirse.common.logger import log
 from ivirse.common.typing import FitRes, Parameters
 from ivirse.server.client_proxy import ClientProxy
 
+
 from .aggregate import aggregate_median
 from .fedavg import FedAvg
 
@@ -30,7 +31,7 @@ class FedMedian(FedAvg):
         self,
         server_round: int,
         results: List[Tuple[ClientProxy, FitRes]],
-        failures: List[Tuple[ClientProxy, FitRes] | BaseException]
+        failures: List[Tuple[ClientProxy, FitRes] | BaseException],
     ) -> Parameters | None:
         """Aggregate fit results using median."""
         if not results:
@@ -51,3 +52,6 @@ class FedMedian(FedAvg):
         )
         
         return parameter_aggregated
+    
+    
+        

@@ -72,3 +72,25 @@ class Strategy(ABC):
                 the updates received in this round are discarded, and the global
                 model parameters remain the same.
         """
+    
+    @abstractmethod
+    def evaluate(
+        self, server_round: int, parameters: Parameters
+    ) -> Optional[Tuple[float, float]]:
+        """Evaluate the current model parameters
+        
+        This function can be used to perform centralized (i.e, server-side) evaluation
+        of model parameters.
+
+        Args:
+            server_round (int):
+                The current round of fererated learning.
+            parameters (Parameters):
+                The current (global) model parameters.
+
+        Returns:
+            Optional[Tuple[float, float]]:
+                The evaluation result. usually a Tuple containing loss
+                and accuracy 
+        """
+    

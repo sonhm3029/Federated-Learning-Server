@@ -5,9 +5,10 @@ from ivirse.common.typing import FitRes, Parameters, FitIns
 from ivirse.server.client_manager import ClientManager
 from ivirse.common.parameter import parameters_to_ndarrays, ndarrays_to_parameters
 from ivirse.server.strategy.aggregate import aggregate
+from ivirse.common import NDArrays
 
 from logging import WARNING
-from typing import List, Tuple, Optional, Union
+from typing import List, Tuple, Optional, Union, Callable
 
 WARNING_MIN_AVAILABLE_CLIENTS_TOO_LOW = """
 Setting `min_available_clients` lower than `min_fit_clients` or
@@ -27,6 +28,12 @@ class FedAvg(Strategy):
         min_available_clients: int = 2,
         initial_parameters: Optional[Parameters] = None,
         accept_failures: bool = True,
+                evaluate_fn: Optional[
+            Callable[
+                [int, NDArrays],
+                Optional[Tuple[float, float]]
+            ]
+        ]
     ) -> None:
         """Federated Averaging Stategy.
 
@@ -49,6 +56,7 @@ class FedAvg(Strategy):
         self.min_available_clients = min_available_clients
         self.initial_parameters = initial_parameters
         self.accept_failures = accept_failures
+        self.evaluate_fn = evaluate_fn
         
     def num_fit_clients(self, num_available_clients: int) -> Tuple[int, int]:
         """
@@ -101,6 +109,23 @@ class FedAvg(Strategy):
         ]
         
         parameters_aggregated = ndarrays_to_parameters(aggregate(weights_results))
+        
+        return parameters_aggregated
+
+    def evaluate(
+        self, server_round: int, parameters: Parameters
+    ) -> Optional[Tuple[float, float]]:
+        """Evaluate model parameters using an evaluation function."""
+        if self.evaluate_fn is None:
+            # No evaluation function provided
+            return None
+        parameters_ndarrays = parameters_to_ndarrays(parameters)
+        eval_res = self.evaluate_fn(server_round, parameters_ndarrays)
+        
+        if eval_res is None:
+            return None
+        loss, acc = eval_res
+        return loss, acc
         
         
         

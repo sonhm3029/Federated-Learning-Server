@@ -42,17 +42,49 @@ class Server:
         
         log(INFO, "Initialize global parameters")
         self.parameters = self._get_initial_parameters(timeout=timeout)
+        log(INFO, "Evaluating initial parameters")
+        res = self.strategy.evaluate(0, parameters=self.parameters)
+        if res is not None:
+            log(
+                INFO,
+                "initial parameters (loss, accuracy): %s, %s",
+                res[0],
+                res[1]
+            )
+            history.add_loss_centralized(server_round=0, loss=res[0])
+            history.add_acc_centralized(server_round=0, acc=res[1])
         
         # Training
         log(INFO, "FL starting!")
         start_time = timeit.default_timer() 
         
         for current_round in range(1, num_rounds + 1):
+            
+            # Train model and replace previous global model
             res_fit = self.fit_round(server_round=current_round, timeout=timeout)
             if res_fit:
                 parameters_prime, _ = res_fit
                 if parameters_prime:
-                    self.parameters = parameters_prime        
+                    self.parameters = parameters_prime  
+                    
+            # Evaluate model using strategy (server) implementation
+            res_cen = self.strategy.evaluate(current_round, parameters=self.parameters)
+            if res_cen is not None:
+                loss_cen, acc_cen = res_cen
+                log(
+                    INFO,
+                    "fit progress: (round: %s, loss; %s, acc: %s, %s)",
+                    current_round,
+                    loss_cen,
+                    acc_cen,
+                    timeit.default_timer() - start_time,
+                )
+                history.add_loss_centralized(server_round=current_round, loss=loss_cen)
+                history.add_acc_centralized(server_round=current_round, acc=acc_cen)
+                
+            
+            
+
         # Bookkeeping
         end_time = timeit.default_timer()
         elapsed = end_time - start_time
