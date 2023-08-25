@@ -68,6 +68,7 @@ class Server:
                     self.parameters = parameters_prime  
                     
             # Evaluate model using strategy (server) implementation
+            log(INFO, "Evaluating in server side...")
             res_cen = self.strategy.evaluate(current_round, parameters=self.parameters)
             if res_cen is not None:
                 loss_cen, acc_cen = res_cen
@@ -81,9 +82,6 @@ class Server:
                 )
                 history.add_loss_centralized(server_round=current_round, loss=loss_cen)
                 history.add_acc_centralized(server_round=current_round, acc=acc_cen)
-                
-            
-            
 
         # Bookkeeping
         end_time = timeit.default_timer()
