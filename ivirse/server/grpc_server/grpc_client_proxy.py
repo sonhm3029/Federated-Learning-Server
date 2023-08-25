@@ -46,7 +46,7 @@ class GrpcClientProxy(ClientProxy):
         
         res_wrapper: ResWrapper = self.bridge.request(
             ins_wrapper=InsWrapper(
-                server_message=ServerReply(parameters = parameters),
+                server_message=ServerReply(parameters = parameters, message="Request fit"),
                 timeout=timeout
             )
         )
