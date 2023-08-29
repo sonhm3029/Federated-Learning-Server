@@ -8,5 +8,5 @@ imutils==0.5.4
 tqdm==4.65.0
 Flask==2.2.5
 albumentations==1.2.1
-grpcio==1.56.2
+grpcio==1.57.0
 grpcio-tools==1.57.0
